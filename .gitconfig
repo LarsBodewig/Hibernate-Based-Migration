@@ -1,0 +1,20 @@
+[alias]
+	all = "!git add -A && git commit -m \"$1\" && git push #"
+	amend = !GIT_EDITOR=true git commit --amend
+	autorebase = !git fetch --prune && GIT_EDITOR=true git rebase -i origin/$(git config custom.defaultbranch)
+	bla = branch -la
+	continue = "!GIT_EDITOR=true git rebase --continue"
+	edit = "!git commit --amend -m \"$1\" && git rebase --continue #"
+	gpg = !printf \"Meaning of commit signature codes:\n $(tput setaf 4)$(tput bold)G$(tput sgr0)  Good valid signature\n $(tput setaf 4)$(tput bold)B$(tput sgr0)  Bad signature\n $(tput setaf 4)$(tput bold)U$(tput sgr0)  Good signature with unknown validity\n $(tput setaf 4)$(tput bold)X$(tput sgr0)  Good signature that has expired\n $(tput setaf 4)$(tput bold)Y$(tput sgr0)  Good signature made by an expired key\n $(tput setaf 4)$(tput bold)R$(tput sgr0)  Good signature made by a revoked key\n $(tput setaf 4)$(tput bold)E$(tput sgr0)  Signature cannot be checked (e.g. missing key)\n $(tput setaf 4)$(tput bold)N$(tput sgr0)  No signature\n\"
+	line = !git log --format=\"%C(auto)%h %C(blue bold)%G?%C(auto)%d %s\" --boundary origin/$(git config custom.defaultbranch)..
+	log5 = log --format=\"%C(auto)%h %C(blue bold)%G?%C(auto)%d %s\" -n 5
+	repull = pull --rebase
+	selfupdate = !git fetch --prune && git pull
+	bvv = branch -vv
+[custom]
+	defaultbranch = main
+[rebase]
+	autoSquash = true
+[remote "template"]
+	url = https://github.com/LarsBodewig/Template.git
+	fetch = +refs/heads/main:refs/remotes/template/main
