@@ -8,15 +8,27 @@
     </parent>
     <artifactId>java-based-migration-plugin</artifactId>
     <packaging>maven-plugin</packaging>
-    <name>Java Based Migrations Maven Plugin</name>
+    <name>Java Based Migration Maven Plugin</name>
     <description>A maven plugin to manage migrations of JPA-generated classes or other files between application versions</description>
-    <url>https://github.com/LarsBodewig/java-based-migration</url>
+    <url>https://github.com/LarsBodewig/Java-Based-Migration</url>
     <licenses>
         <license>
-            <name>The Apache License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <name>GNU General Public License, Version 3 or later</name>
+            <url>https://www.gnu.org/licenses/gpl-3.0.txt</url>
         </license>
     </licenses>
+    <developers>
+        <developer>
+            <name>Lars Bodewig</name>
+            <email>lars@bodewig.dev</email>
+            <url>https://bodewig.dev</url>
+        </developer>
+    </developers>
+    <scm>
+        <connection>scm:git:git://github.com/LarsBodewig/Java-Based-Migration.git</connection>
+        <developerConnection>scm:git:ssh://github.com:LarsBodewig/Java-Based-Migration.git</developerConnection>
+        <url>http://github.com/LarsBodewig/Java-Based-Migration</url>
+    </scm>
     <distributionManagement>
         <repository>
             <id>ossrh</id>
@@ -105,11 +117,29 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-gpg-plugin</artifactId>
-                <version>3.0.1</version>
-            </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>publish</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>3.0.1</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                                <phase>verify</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
