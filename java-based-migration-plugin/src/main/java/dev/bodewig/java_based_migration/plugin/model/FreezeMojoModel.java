@@ -52,8 +52,8 @@ public abstract class FreezeMojoModel extends AbstractMojo { // AbstractMojoExec
 	protected List<Glob> persistenceClassesGlobList;
 
 	/**
-	 * Define persistence classes to freeze (can be used in conjunction with {@code
-	 * persistenceClassesGlobList})
+	 * Define resources to freeze (can be used in conjunction with {@code
+	 * persistenceResourcesGlobList})
 	 *
 	 * <pre>
 	 * &lt;persistenceResourcesFileList&gt;
@@ -67,12 +67,12 @@ public abstract class FreezeMojoModel extends AbstractMojo { // AbstractMojoExec
 	protected List<File> persistenceResourcesFileList;
 
 	/**
-	 * Define persistence classes to freeze (can be used in conjunction with {@code
-	 * persistenceClassesFileList})
+	 * Define resources to freeze (can be used in conjunction with {@code
+	 * persistenceResourcesFileList})
 	 *
 	 * <pre>
 	 * &lt;persistenceResourcesGlobList&gt;
-	 * 	&lt;glob&gt;path/relative/to/./src/main/resources/.xml_bak&lt;/glob&gt;
+	 * 	&lt;glob&gt;path/relative/to/./src/main/resources/*.xml_bak&lt;/glob&gt;
 	 * 	...
 	 * 	&lt;glob&gt;
 	 * 		&lt;basePath&gt;${project.build.resourceDirectory}&lt;/basePath&gt;
