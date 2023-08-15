@@ -20,6 +20,11 @@
             <artifactId>flyway-core</artifactId>
             <version>9.20.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>6.2.6.Final</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -117,6 +122,16 @@
                         <phase>test</phase>
                         <configuration>
                             <mainClass>my.db.migration.example.FlywayExample</mainClass>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>hibernate</id>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <phase>test</phase>
+                        <configuration>
+                            <mainClass>my.db.migration.example.HibernateExample</mainClass>
                         </configuration>
                     </execution>
                 </executions>
