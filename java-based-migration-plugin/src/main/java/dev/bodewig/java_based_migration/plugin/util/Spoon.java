@@ -87,7 +87,7 @@ public class Spoon {
 
 	private static List<Pair<CtTypeReference<?>, CtType<?>>> getInternalReferences(CtPackage pkg) {
 		List<Pair<CtTypeReference<?>, CtType<?>>> referencedTypes = getElements(pkg, CtTypeReference.class)
-				.filter(ref -> ref.getTypeDeclaration().hasParent(pkg))
+				.filter(ref -> ref.getTypeDeclaration() != null && ref.getTypeDeclaration().hasParent(pkg))
 				.map(ref -> new Pair<CtTypeReference<?>, CtType<?>>(ref, ref.getTypeDeclaration())).toList();
 		return referencedTypes;
 	}
