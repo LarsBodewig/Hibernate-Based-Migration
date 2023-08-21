@@ -10,20 +10,10 @@ public class HibernateExample {
 
 	public static void main(String[] args) throws SQLException {
 		Configuration configOld = new Configuration();
-		configOld.setProperty("hibernate.connection.driver_class", "org.h2.Driver");
-		configOld.setProperty("hibernate.connection.url", "jdbc:h2:mem:hibernate");
-		configOld.setProperty("hibernate.connection.username", "sa");
-		configOld.setProperty("hibernate.connection.password", "");
-		configOld.setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
-		configOld.addAnnotatedClass(my.db._1_0_0.classes.pkg.food.Fruit.class);
+		configOld.configure("/db/V0_hibernate.cfg.xml");
 
 		Configuration configNew = new Configuration();
-		configNew.setProperty("hibernate.connection.driver_class", "org.h2.Driver");
-		configNew.setProperty("hibernate.connection.url", "jdbc:h2:mem:hibernate");
-		configNew.setProperty("hibernate.connection.username", "sa");
-		configNew.setProperty("hibernate.connection.password", "");
-		configNew.setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
-		configNew.addAnnotatedClass(my.db._2_0_0.classes.pkg.food.Fruit.class);
+		configNew.configure("/db/V1_hibernate.cfg.xml");
 
 		try (SessionFactory factoryOld = configOld.buildSessionFactory();
 				SessionFactory factoryNew = configNew.buildSessionFactory()) {
