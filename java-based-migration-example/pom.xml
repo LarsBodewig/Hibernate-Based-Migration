@@ -25,6 +25,11 @@
             <artifactId>hibernate-core</artifactId>
             <version>6.2.6.Final</version>
         </dependency>
+        <dependency>
+            <groupId>dev.bodewig.db2ascii</groupId>
+            <artifactId>db2ascii</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
