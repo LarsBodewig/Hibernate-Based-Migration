@@ -1,5 +1,9 @@
 package my.db.migration.example;
 
+import dev.bodewig.db2ascii.Db2Ascii;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import java.sql.SQLException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -8,7 +12,7 @@ import org.hibernate.cfg.Configuration;
 
 public class HibernateExample {
 
-	public static void main(String[] args) throws SQLException {
+	public static void main(String[] args) throws SQLException, IllegalArgumentException, IllegalAccessException {
 		Configuration configOld = new Configuration();
 		configOld.configure("/db/V0_hibernate.cfg.xml");
 
@@ -22,13 +26,9 @@ public class HibernateExample {
 		}
 	}
 
-	public static void initialize(SessionFactory factoryOld) throws SQLException {
+	public static void initialize(SessionFactory factoryOld)
+			throws SQLException, IllegalArgumentException, IllegalAccessException {
 		try (Session session = factoryOld.openSession()) {
-			session.doWork(con -> {
-				con.createStatement()
-						.executeUpdate("CREATE TABLE Fruit (name VARCHAR(255), weight INTEGER, colorhex CHAR(6))");
-			});
-
 			// insert data for 1.0.0
 			Transaction transaction = session.beginTransaction();
 			my.db._1_0_0.classes.pkg.food.Fruit oldFruit = new my.db._1_0_0.classes.pkg.food.Fruit();
@@ -39,17 +39,17 @@ public class HibernateExample {
 			transaction.commit();
 
 			// print table contents
-			my.db._1_0_0.classes.pkg.food.Fruit oldFruitFromDb = session.find(my.db._1_0_0.classes.pkg.food.Fruit.class,
-					"Orange");
-			System.out.println("TABLE Fruit initialized:");
-			System.out.println("|  name  | weight | color_hex |");
-			System.out.println("|--------|--------|-----------|");
-			System.out.println("| %s |   %d  |  #%s  |".formatted(oldFruitFromDb.name, oldFruitFromDb.weight,
-					oldFruitFromDb.colorHex));
+			CriteriaBuilder builder = session.getCriteriaBuilder();
+			CriteriaQuery<my.db._1_0_0.classes.pkg.food.Fruit> query = builder
+					.createQuery(my.db._1_0_0.classes.pkg.food.Fruit.class);
+			Root<my.db._1_0_0.classes.pkg.food.Fruit> root = query.from(my.db._1_0_0.classes.pkg.food.Fruit.class);
+			query.select(root);
+			Db2Ascii.printQueryResult(session.createQuery(query));
 		}
 	}
 
-	public static void migrate(SessionFactory factoryOld, SessionFactory factoryNew) throws SQLException {
+	public static void migrate(SessionFactory factoryOld, SessionFactory factoryNew)
+			throws SQLException, IllegalArgumentException, IllegalAccessException {
 		// read data from 1.0.0
 		my.db._1_0_0.classes.pkg.food.Fruit oldFruit = null;
 		try (Session session = factoryOld.openSession()) {
@@ -63,25 +63,18 @@ public class HibernateExample {
 		newFruit.colorRgb = hexToRgb(oldFruit.colorHex); // <--- complex operation that cannot be done in pure sql
 
 		try (Session session = factoryNew.openSession()) {
-			// migrate scheme to 2.0.0
-			session.doWork(con -> {
-				con.createStatement().executeUpdate("ALTER TABLE Fruit DROP COLUMN colorhex");
-				con.createStatement().executeUpdate("ALTER TABLE Fruit ADD COLUMN colorrgb VARCHAR(11)");
-			});
-
 			// update data for 2.0.0
 			Transaction transaction = session.beginTransaction();
-			session.persist(newFruit);
+			session.merge(newFruit);
 			transaction.commit();
 
 			// print table contents
-			my.db._2_0_0.classes.pkg.food.Fruit newFruitFromDb = session.find(my.db._2_0_0.classes.pkg.food.Fruit.class,
-					"Orange");
-			System.out.println("TABLE Fruit migrated:");
-			System.out.println("|  name  | weight | color_rgb |");
-			System.out.println("|--------|--------|-----------|");
-			System.out.println("| %s |   %d  | %s |".formatted(newFruitFromDb.name, newFruitFromDb.weight,
-					newFruitFromDb.colorRgb));
+			CriteriaBuilder builder = session.getCriteriaBuilder();
+			CriteriaQuery<my.db._2_0_0.classes.pkg.food.Fruit> query = builder
+					.createQuery(my.db._2_0_0.classes.pkg.food.Fruit.class);
+			Root<my.db._2_0_0.classes.pkg.food.Fruit> root = query.from(my.db._2_0_0.classes.pkg.food.Fruit.class);
+			query.select(root);
+			Db2Ascii.printQueryResult(session.createQuery(query));
 		}
 	}
 

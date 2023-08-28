@@ -1,5 +1,6 @@
 package my.db.migration.example;
 
+import dev.bodewig.db2ascii.Db2Ascii;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -41,14 +42,7 @@ public class PureJavaExample {
 
 			// print table contents
 			try (ResultSet rs = stmt.executeQuery("SELECT * FROM Fruit")) {
-				rs.next();
-				String name = rs.getString(1);
-				int weight = rs.getInt(2);
-				String colorHex = rs.getString(3);
-				System.out.println("TABLE Fruit initialized:");
-				System.out.println("|  name  | weight | color_hex |");
-				System.out.println("|--------|--------|-----------|");
-				System.out.println("| %s |   %d  |  #%s  |".formatted(name, weight, colorHex));
+				Db2Ascii.printResultSet(rs);
 			}
 		}
 	}
@@ -81,14 +75,7 @@ public class PureJavaExample {
 
 			// print table contents
 			try (ResultSet rs = stmt.executeQuery("SELECT * FROM Fruit")) {
-				rs.next();
-				String name = rs.getString(1);
-				int weight = rs.getInt(2);
-				String colorRgb = rs.getString(3);
-				System.out.println("TABLE Fruit migrated:");
-				System.out.println("|  name  | weight | color_rgb |");
-				System.out.println("|--------|--------|-----------|");
-				System.out.println("| %s |   %d  | %s |".formatted(name, weight, colorRgb));
+				Db2Ascii.printResultSet(rs);
 			}
 		}
 	}
