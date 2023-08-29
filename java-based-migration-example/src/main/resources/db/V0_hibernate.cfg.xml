@@ -8,6 +8,7 @@
       	<property name = "connection.username">sa</property>
       	<property name = "connection.password"></property>
         <property name="dialect">org.hibernate.dialect.H2Dialect</property>
+        <property name="hibernate.hbm2ddl.auto">create</property>
         <mapping class="my.db._1_0_0.classes.pkg.food.Fruit"/>
     </session-factory>
 </hibernate-configuration>
