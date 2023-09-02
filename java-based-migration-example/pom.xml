@@ -30,6 +30,11 @@
             <artifactId>db2ascii</artifactId>
             <version>1.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>dev.bodewig.java-based-migration</groupId>
+            <artifactId>hibernate-based-migration</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -137,6 +142,26 @@
                         <phase>test</phase>
                         <configuration>
                             <mainClass>my.db.migration.example.HibernateExample</mainClass>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>hibernate-stateless</id>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <phase>test</phase>
+                        <configuration>
+                            <mainClass>my.db.migration.example.HibernateStatelessExample</mainClass>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>hibernate-migration</id>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <phase>test</phase>
+                        <configuration>
+                            <mainClass>my.db.migration.example.HibernateMigrationExample</mainClass>
                         </configuration>
                     </execution>
                 </executions>
