@@ -42,8 +42,7 @@ public class FlywayExample {
 			ps.execute();
 
 			// initialize flyway
-			Flyway flyway = Flyway.configure().loggers().baselineVersion("0").dataSource("jdbc:h2:mem:flyway", "", "")
-					.load();
+			Flyway flyway = Flyway.configure().baselineVersion("0").dataSource("jdbc:h2:mem:flyway", "", "").load();
 			flyway.baseline();
 
 			// print table contents
@@ -65,7 +64,7 @@ public class FlywayExample {
 			oldFruit.colorHex = fruits.getString(3);
 
 			// migrate scheme to 2.0.0
-			Flyway flyway = Flyway.configure().loggers().dataSource("jdbc:h2:mem:flyway", "", "").load();
+			Flyway flyway = Flyway.configure().dataSource("jdbc:h2:mem:flyway", "", "").load();
 			flyway.migrate();
 
 			// migrate data to 2.0.0
