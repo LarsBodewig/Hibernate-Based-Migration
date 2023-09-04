@@ -2,17 +2,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>dev.bodewig.java-based-migration</groupId>
-        <artifactId>java-based-migration-parent</artifactId>
+        <groupId>dev.bodewig.hibernate-based-migration</groupId>
+        <artifactId>hibernate-based-migration-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
     <artifactId>hibernate-based-migration</artifactId>
     <dependencies>
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>2.1.214</version>
-        </dependency>
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>

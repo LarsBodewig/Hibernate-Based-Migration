@@ -1,2 +1,0 @@
-ALTER TABLE Fruit DROP COLUMN color_hex;
-ALTER TABLE Fruit ADD COLUMN color_rgb VARCHAR(11);
