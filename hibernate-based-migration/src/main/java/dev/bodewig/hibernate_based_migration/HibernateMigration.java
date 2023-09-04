@@ -1,5 +1,6 @@
 package dev.bodewig.hibernate_based_migration;
 
+import java.io.Serializable;
 import org.flywaydb.core.api.CoreMigrationType;
 import org.flywaydb.core.api.migration.BaseJavaMigration;
 import org.flywaydb.core.api.migration.Context;
@@ -8,7 +9,8 @@ import org.hibernate.SessionFactory;
 import org.hibernate.StatelessSession;
 import org.hibernate.cfg.Configuration;
 
-public abstract class HibernateMigration extends BaseJavaMigration {
+@SuppressWarnings("serial")
+public abstract class HibernateMigration extends BaseJavaMigration implements Serializable {
 
 	protected Configuration configBefore;
 
@@ -39,6 +41,13 @@ public abstract class HibernateMigration extends BaseJavaMigration {
 			}
 		}
 	}
+
+	@Override
+	public Integer getChecksum() {
+		return Long.hashCode(getSerialVersionUID());
+	}
+
+	protected abstract long getSerialVersionUID();
 
 	public abstract Configuration configBefore();
 
