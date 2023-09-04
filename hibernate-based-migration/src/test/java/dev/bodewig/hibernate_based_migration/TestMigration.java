@@ -12,7 +12,14 @@ import org.hibernate.cfg.Configuration;
 
 public class TestMigration extends HibernateMigration {
 
+	private static final long serialVersionUID = 2198717374000299523L;
+
 	private List<FruitBefore> fruits;
+
+	@Override
+	protected long getSerialVersionUID() {
+		return serialVersionUID;
+	}
 
 	@Override
 	public Configuration configBefore() {
