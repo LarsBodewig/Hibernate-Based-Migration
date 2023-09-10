@@ -7,13 +7,16 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>
     <artifactId>hibernate-based-migration-example</artifactId>
-    <version>2.0.0</version>
-    <packaging>jar</packaging>
     <dependencies>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>${flyway.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.hibernate.orm</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>6.2.6.Final</version>
+            <version>${hibernate.version}</version>
         </dependency>
         <dependency>
             <groupId>dev.bodewig.db2ascii</groupId>
@@ -50,73 +53,85 @@
                     </execution>
                 </executions>
             </plugin>
-            <!--plugin>
-                <groupId>org.flywaydb</groupId>
-                <artifactId>flyway-maven-plugin</artifactId>
-                <version>9.22.0</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.flywaydb</groupId>
-                        <artifactId>flyway-mysql</artifactId>
-                        <version>9.22.0</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.mariadb.jdbc</groupId>
-                        <artifactId>mariadb-java-client</artifactId>
-                        <version>3.2.0</version>
-                    </dependency>
-                </dependencies>
-                <executions>
-                    <execution>
-                        <id>baseline</id>
-                        <goals>
-                            <goal>baseline</goal>
-                        </goals>
-                        <phase>generate-sources</phase>
-                        <configuration>
-                            <url>jdbc:mariadb://localhost:3306/test</url>
-                            <user>root</user>
-                            <baselineVersion>0</baselineVersion>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin-->
             <plugin>
                 <groupId>dev.bodewig.hibernate-based-migration</groupId>
                 <artifactId>hibernate-based-migration-plugin</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.flywaydb</groupId>
-                        <artifactId>flyway-mysql</artifactId>
-                        <version>9.22.0</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.mariadb.jdbc</groupId>
-                        <artifactId>mariadb-java-client</artifactId>
-                        <version>3.2.0</version>
-                    </dependency>
-                </dependencies>
                 <executions>
                     <execution>
-                        <id>freezeway</id>
+                        <id>thaw</id>
                         <goals>
-                            <goal>freezeway</goal>
+                            <goal>thaw</goal>
                         </goals>
-                        <configuration>
-                            <url>jdbc:mariadb://localhost:3306/test</url>
-                            <user>root</user>
-                            <locations>
-                                <location>classpath:/db/migration</location>
-                            </locations>
-                            <baselineVersion>0</baselineVersion>
-                            <persistenceClassesFileList>
-                                <file>dev.bodewig.hibernate_based_migration_example.Fruit.java</file>
-                            </persistenceClassesFileList>
-                        </configuration>
+                        <configuration/>
                     </execution>
                 </executions>
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>freeze</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>dev.bodewig.hibernate-based-migration</groupId>
+                        <artifactId>hibernate-based-migration-plugin</artifactId>
+                        <version>1.0.0-SNAPSHOT</version>
+                        <executions>
+                            <execution>
+                                <id>freeze</id>
+                                <goals>
+                                    <goal>freeze</goal>
+                                </goals>
+                                <configuration>
+                                    <persistenceClassesFileList>
+                                        <file>dev.bodewig.hibernate_based_migration_example.Fruit.java</file>
+                                    </persistenceClassesFileList>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>migrate</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.flywaydb</groupId>
+                        <artifactId>flyway-maven-plugin</artifactId>
+                        <version>${flyway.version}</version>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.flywaydb</groupId>
+                                <artifactId>flyway-mysql</artifactId>
+                                <version>${flyway.version}</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>org.mariadb.jdbc</groupId>
+                                <artifactId>mariadb-java-client</artifactId>
+                                <version>3.2.0</version>
+                            </dependency>
+                        </dependencies>
+                        <executions>
+                            <execution>
+                                <id>migrate</id>
+                                <goals>
+                                    <goal>migrate</goal>
+                                </goals>
+                                <configuration>
+                                    <url>jdbc:mariadb://localhost:3306/test</url>
+                                    <user>root</user>
+                                    <baselineVersion>0</baselineVersion>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
