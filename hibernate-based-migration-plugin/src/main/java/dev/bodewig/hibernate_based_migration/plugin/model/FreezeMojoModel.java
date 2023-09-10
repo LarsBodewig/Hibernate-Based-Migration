@@ -1,6 +1,6 @@
-package dev.bodewig.java_based_migration.plugin.model;
+package dev.bodewig.hibernate_based_migration.plugin.model;
 
-import dev.bodewig.java_based_migration.plugin.util.Glob;
+import dev.bodewig.hibernate_based_migration.plugin.util.Glob;
 import java.io.File;
 import java.util.List;
 import org.apache.maven.plugin.AbstractMojo;
@@ -8,10 +8,16 @@ import org.apache.maven.plugins.annotations.Parameter;
 
 public abstract class FreezeMojoModel extends AbstractMojo {
 
+	protected static final String INITIAL_VERSION = "1";
+
 	/**
 	 * The version used to store frozen files and to calculate the base package name
+	 * <p>
+	 * Usually this should be an continuously increasing integer. If no version is
+	 * supplied the {@code frozenDir} is inspected for existing versions and tries
+	 * to increment. If no prior version is found starts with version 1.
 	 */
-	@Parameter(defaultValue = "${project.version}")
+	@Parameter
 	protected String freezeVersion;
 
 	/** Output directory for the frozen persistence files */
@@ -83,4 +89,39 @@ public abstract class FreezeMojoModel extends AbstractMojo {
 	 */
 	@Parameter
 	protected List<Glob> persistenceResourcesGlobList;
+
+	/**
+	 * List of {@code persistenceResourcesFiles} that should not be considered when
+	 * replacing package references (can be used in conjunction with {@code
+	 * resourceFilteringExcludeGlobList})
+	 * 
+	 * <pre>
+	 * &lt;resourceFilteringExcludeFileList&gt;
+	 * 	&lt;file&gt;src/main/resources/logging.xml&lt;/file&gt;
+	 * 	&lt;file&gt;src/main/resources/config&lt;/file&gt;
+	 * 	...
+	 * &lt;/resourceFilteringExcludeFileList&gt;
+	 * </pre>
+	 */
+	@Parameter
+	protected List<File> resourceFilteringExcludeFileList;
+
+	/**
+	 * List of {@code persistenceResourcesFiles} that should not be considered when
+	 * replacing package references (can be used in conjunction with {@code
+	 * resourceFilteringExcludeFileList})
+	 * 
+	 * <pre>
+	 * &lt;resourceFilteringExcludeGlobList&gt;
+	 * 	&lt;glob&gt;path/relative/to/./src/main/resources/*.xml_bak&lt;/glob&gt;
+	 * 	...
+	 * 	&lt;glob&gt;
+	 * 		&lt;basePath&gt;${project.build.resourceDirectory}&lt;/basePath&gt;
+	 * 		&lt;pattern&gt;*.conf&lt;/pattern&gt;
+	 * 	&lt;/glob&gt;
+	 * &lt;/resourceFilteringExcludeGlobList&gt;
+	 * </pre>
+	 */
+	@Parameter
+	protected List<Glob> resourceFilteringExcludeGlobList;
 }

@@ -1,5 +1,6 @@
-package dev.bodewig.hibernate_based_migration;
+package dev.bodewig.hibernate_based_migration_example;
 
+import dev.bodewig.hibernate_based_migration.HibernateMigration;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
@@ -14,7 +15,7 @@ public class TestMigration extends HibernateMigration {
 
 	private static final long serialVersionUID = 2198717374000299523L;
 
-	private List<FruitBefore> fruits;
+	private List<Fruit> fruits;
 
 	@Override
 	protected long getSerialVersionUID() {
@@ -34,8 +35,8 @@ public class TestMigration extends HibernateMigration {
 	@Override
 	public void doBefore(StatelessSession session) {
 		CriteriaBuilder builder = session.getCriteriaBuilder();
-		CriteriaQuery<FruitBefore> query = builder.createQuery(FruitBefore.class);
-		Root<FruitBefore> root = query.from(FruitBefore.class);
+		CriteriaQuery<Fruit> query = builder.createQuery(Fruit.class);
+		Root<Fruit> root = query.from(Fruit.class);
 		query.select(root);
 		this.fruits = session.createQuery(query).getResultList();
 	}
@@ -51,10 +52,10 @@ public class TestMigration extends HibernateMigration {
 	@Override
 	public void doAfter(StatelessSession session) {
 		this.fruits.stream().map(fruitBefore -> {
-			FruitAfter fruitAfter = new FruitAfter();
+			Fruit fruitAfter = new Fruit();
 			fruitAfter.name = fruitBefore.name;
 			fruitAfter.weight = fruitBefore.weight;
-			fruitAfter.colorRgb = hexToRgb(fruitBefore.colorHex);
+			// fruitAfter.colorRgb = hexToRgb(fruitBefore.colorHex);
 			return fruitAfter;
 		}).forEach(fruitAfter -> session.update(fruitAfter));
 	}

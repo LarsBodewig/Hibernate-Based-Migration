@@ -1,4 +1,4 @@
-package dev.bodewig.java_based_migration.plugin.util;
+package dev.bodewig.hibernate_based_migration.plugin.util;
 
 import java.io.File;
 import java.util.Collection;
@@ -35,17 +35,20 @@ public class Spoon {
 		this.log.info("Read " + getElements(this.model, CtType.class).count() + " types");
 	}
 
-	public void rewritePackages(String name) {
+	public Pair<String, String> rewritePackages(String name) {
 		CtPackage basePkg = getBasePackage(this.model);
-		this.log.debug("Identified base package " + basePkg.getQualifiedName());
+		String oldPkgName = basePkg.getQualifiedName();
+		this.log.debug("Identified base package " + oldPkgName);
 		CtPackage newPkg = basePkg.getFactory().createPackage().setSimpleName(name);
 		List<Pair<CtTypeReference<?>, CtType<?>>> refs = getInternalReferences(basePkg);
 		movePackageContents(basePkg, newPkg);
 		basePkg.addPackage(newPkg);
-		this.log.debug("Created new base package " + newPkg.getQualifiedName());
+		String newPkgName = newPkg.getQualifiedName();
+		this.log.debug("Created new base package " + newPkgName);
 		basePkg.updateAllParentsBelow();
 		updateInternalReferences(refs);
 		this.log.debug("Rewrote package internal references");
+		return new Pair<>(oldPkgName, newPkgName);
 	}
 
 	public void writeClassModel(File outDir) {
