@@ -1,4 +1,4 @@
-package dev.bodewig.java_based_migration.plugin.util;
+package dev.bodewig.hibernate_based_migration.plugin.util;
 
 import java.io.File;
 import java.util.Collection;

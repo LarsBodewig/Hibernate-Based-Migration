@@ -5,16 +5,89 @@
     <artifactId>hibernate-based-migration-parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
+    <licenses>
+        <license>
+            <name>GNU General Public License, Version 3 or later</name>
+            <url>https://www.gnu.org/licenses/gpl-3.0.txt</url>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <name>Lars Bodewig</name>
+            <email>lars@bodewig.dev</email>
+            <url>https://bodewig.dev</url>
+        </developer>
+    </developers>
     <modules>
         <module>hibernate-based-migration</module>
         <module>hibernate-based-migration-plugin</module>
         <module>hibernate-based-migration-example</module>
     </modules>
+    <scm>
+        <connection>scm:git:git://github.com/LarsBodewig/Hibernate-Based-Migration.git</connection>
+        <developerConnection>scm:git:ssh://github.com:LarsBodewig/Hibernate-Based-Migration.git</developerConnection>
+        <url>http://github.com/LarsBodewig/Hibernate-Based-Migration</url>
+    </scm>
+    <distributionManagement>
+        <repository>
+            <id>ossrh</id>
+            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
     <properties>
         <java.version>17</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <hibernate.version>6.2.6.Final</hibernate.version>
+        <flyway.version>9.20.0</flyway.version>
     </properties>
+
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>3.2.1</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>jar-no-fork</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>3.5.0</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>javadoc-no-fork</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-gpg-plugin</artifactId>
+                    <version>3.0.1</version>
+                    <executions>
+                        <execution>
+                            <id>sign-artifacts</id>
+                            <goals>
+                                <goal>sign</goal>
+                            </goals>
+                            <phase>verify</phase>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -56,7 +129,7 @@
                     <formats>
                         <format>
                             <includes>
-                                <include>**/persistence.xml</include>
+                                <include>**/*cfg.xml</include>
                             </includes>
                             <prettier>
                                 <devDependencyProperties>

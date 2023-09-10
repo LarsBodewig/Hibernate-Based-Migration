@@ -11,34 +11,6 @@
     <name>Hibernate Based Migration Maven Plugin</name>
     <description>A maven plugin to manage migrations of JPA-generated classes between application versions</description>
     <url>https://github.com/LarsBodewig/Hibernate-Based-Migration</url>
-    <licenses>
-        <license>
-            <name>GNU General Public License, Version 3 or later</name>
-            <url>https://www.gnu.org/licenses/gpl-3.0.txt</url>
-        </license>
-    </licenses>
-    <developers>
-        <developer>
-            <name>Lars Bodewig</name>
-            <email>lars@bodewig.dev</email>
-            <url>https://bodewig.dev</url>
-        </developer>
-    </developers>
-    <scm>
-        <connection>scm:git:git://github.com/LarsBodewig/Hibernate-Based-Migration.git</connection>
-        <developerConnection>scm:git:ssh://github.com:LarsBodewig/Hibernate-Based-Migration.git</developerConnection>
-        <url>http://github.com/LarsBodewig/Hibernate-Based-Migration</url>
-    </scm>
-    <distributionManagement>
-        <repository>
-            <id>ossrh</id>
-            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-        </repository>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
     <dependencies>
         <dependency>
             <groupId>org.apache.maven</groupId>
@@ -86,11 +58,6 @@
             <version>4.8.0</version>
         </dependency>
         <dependency>
-            <groupId>org.flywaydb</groupId>
-            <artifactId>flyway-maven-plugin</artifactId>
-            <version>9.22.0</version>
-        </dependency>
-        <dependency>
             <groupId>dev.bodewig.hibernate-based-migration</groupId>
             <artifactId>hibernate-based-migration</artifactId>
             <version>1.0.0-SNAPSHOT</version>
@@ -101,7 +68,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-plugin-plugin</artifactId>
-                <version>3.7.1</version>
+                <version>3.9.0</version>
             </plugin>
         </plugins>
     </build>
@@ -113,40 +80,14 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
-                        <version>3.2.1</version>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>jar-no-fork</goal>
-                                </goals>
-                            </execution>
-                        </executions>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>3.5.0</version>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>javadoc-no-fork</goal>
-                                </goals>
-                            </execution>
-                        </executions>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>3.0.1</version>
-                        <executions>
-                            <execution>
-                                <id>sign-artifacts</id>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                                <phase>verify</phase>
-                            </execution>
-                        </executions>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
