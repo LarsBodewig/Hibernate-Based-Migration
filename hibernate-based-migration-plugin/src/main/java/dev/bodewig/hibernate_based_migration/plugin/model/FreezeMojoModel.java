@@ -107,7 +107,7 @@ public abstract class FreezeMojoModel extends AbstractMojo {
 	protected List<File> resourceFilteringExcludeFileList;
 
 	/**
-	 * List of {@code persistenceResourcesFiles} that should not be considered when
+	 * List of {@code persistenceResourcesGlobs} that should not be considered when
 	 * replacing package references (can be used in conjunction with {@code
 	 * resourceFilteringExcludeFileList})
 	 * 
