@@ -1,0 +1,17 @@
+<!DOCTYPE hibernate-configuration PUBLIC
+  "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+  "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+   <session-factory>
+        <property
+      name="connection.url"
+    >jdbc:mariadb://localhost:3306/test</property>
+        <property
+      name="connection.driver_class"
+    >org.mariadb.jdbc.Driver</property>
+      	<property name="connection.username">root</property>
+      	<property name="connection.password" />
+        <property name="dialect">org.hibernate.dialect.MariaDBDialect</property>
+        <mapping class="dev.bodewig.hibernate_based_migration.example.Fruit" />
+    </session-factory>
+</hibernate-configuration>
