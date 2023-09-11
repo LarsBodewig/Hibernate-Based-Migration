@@ -1,4 +1,4 @@
-package dev.bodewig.hibernate_based_migration_example;
+package dev.bodewig.hibernate_based_migration.example;
 
 import dev.bodewig.hibernate_based_migration.HibernateMigration;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -11,11 +11,11 @@ import org.flywaydb.core.api.migration.Context;
 import org.hibernate.StatelessSession;
 import org.hibernate.cfg.Configuration;
 
-public class TestMigration extends HibernateMigration {
+public class V1__Alter_Fruit_Color extends HibernateMigration {
 
 	private static final long serialVersionUID = 2198717374000299523L;
 
-	private List<Fruit> fruits;
+	private List<dev.bodewig.hibernate_based_migration._1.example.Fruit> fruits;
 
 	@Override
 	protected long getSerialVersionUID() {
@@ -24,19 +24,21 @@ public class TestMigration extends HibernateMigration {
 
 	@Override
 	public Configuration configBefore() {
-		return new Configuration().configure("/db/V0_hibernate.cfg.xml");
+		return new Configuration().configure("/_1/hibernate.cfg.xml");
 	}
 
 	@Override
 	public Configuration configAfter() {
-		return new Configuration().configure("/db/V1_hibernate.cfg.xml");
+		return new Configuration().configure("/_2/hibernate.cfg.xml");
 	}
 
 	@Override
 	public void doBefore(StatelessSession session) {
 		CriteriaBuilder builder = session.getCriteriaBuilder();
-		CriteriaQuery<Fruit> query = builder.createQuery(Fruit.class);
-		Root<Fruit> root = query.from(Fruit.class);
+		CriteriaQuery<dev.bodewig.hibernate_based_migration._1.example.Fruit> query = builder
+				.createQuery(dev.bodewig.hibernate_based_migration._1.example.Fruit.class);
+		Root<dev.bodewig.hibernate_based_migration._1.example.Fruit> root = query
+				.from(dev.bodewig.hibernate_based_migration._1.example.Fruit.class);
 		query.select(root);
 		this.fruits = session.createQuery(query).getResultList();
 	}
@@ -44,18 +46,18 @@ public class TestMigration extends HibernateMigration {
 	@Override
 	public void doSql(Context context) throws SQLException {
 		try (Statement stmt = context.getConnection().createStatement()) {
-			stmt.executeUpdate("ALTER TABLE Fruit DROP COLUMN color_hex");
-			stmt.executeUpdate("ALTER TABLE Fruit ADD COLUMN color_rgb VARCHAR(11)");
+			stmt.executeUpdate("ALTER TABLE Fruit DROP COLUMN colorHex");
+			stmt.executeUpdate("ALTER TABLE Fruit ADD COLUMN colorRgb VARCHAR(11)");
 		}
 	}
 
 	@Override
 	public void doAfter(StatelessSession session) {
 		this.fruits.stream().map(fruitBefore -> {
-			Fruit fruitAfter = new Fruit();
+			dev.bodewig.hibernate_based_migration._2.example.Fruit fruitAfter = new dev.bodewig.hibernate_based_migration._2.example.Fruit();
 			fruitAfter.name = fruitBefore.name;
 			fruitAfter.weight = fruitBefore.weight;
-			// fruitAfter.colorRgb = hexToRgb(fruitBefore.colorHex);
+			fruitAfter.colorRgb = hexToRgb(fruitBefore.colorHex);
 			return fruitAfter;
 		}).forEach(fruitAfter -> session.update(fruitAfter));
 	}

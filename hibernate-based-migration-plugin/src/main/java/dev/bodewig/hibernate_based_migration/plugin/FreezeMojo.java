@@ -45,9 +45,9 @@ public class FreezeMojo extends FreezeMojoModel {
 		log.info("Configured java output directory " + javaOutputDir.getAbsolutePath());
 		spoon.writeClassModel(javaOutputDir);
 		log.info("Writing frozen resources");
-		File resourcesOutputDir = this.getResourcesOutputDir(version);
+		File resourcesOutputDir = this.getResourcesOutputDir(version, normalizedVersion);
 		log.info("Configured resources output directory " + resourcesOutputDir.getAbsolutePath());
-		freezeResources(log, resourcesFiles, resourcesOutputDir, pkgName.left(), pkgName.right());
+		this.freezeResources(resourcesFiles, resourcesOutputDir, pkgName.left(), pkgName.right());
 	}
 
 	protected String getFreezeVersion() throws MojoExecutionException {
@@ -79,13 +79,14 @@ public class FreezeMojo extends FreezeMojoModel {
 		}
 	}
 
-	protected void freezeResources(Log log, List<File> from, File to, String oldPkg, String newPkg)
+	protected void freezeResources(List<File> from, File to, String oldPkg, String newPkg)
 			throws MojoExecutionException {
 		try {
+			this.getLog().info("Filtering resources: <" + oldPkg + "> to <" + newPkg + ">");
 			List<File> filterExclude = getResourceFilterungExclude();
 			for (File file : from) {
-				log.debug("Copying resource " + file.getAbsolutePath());
-				File baseDir = file.isDirectory() ? file.getParentFile() : file;
+				this.getLog().debug("Copying resource " + file.getAbsolutePath());
+				File baseDir = file.isDirectory() ? file : file.getParentFile();
 				copyFile(baseDir, file, to, filterExclude, oldPkg, newPkg);
 			}
 		} catch (IOException e) {
@@ -99,8 +100,8 @@ public class FreezeMojo extends FreezeMojoModel {
 		return javaOutputDir;
 	}
 
-	protected File getResourcesOutputDir(String version) {
-		File resourcesOutputDir = new File(this.frozenDir, version + "/resources/");
+	protected File getResourcesOutputDir(String version, String normalizedVersion) {
+		File resourcesOutputDir = new File(this.frozenDir, version + "/resources/" + normalizedVersion);
 		resourcesOutputDir.mkdirs();
 		return resourcesOutputDir;
 	}
@@ -157,7 +158,7 @@ public class FreezeMojo extends FreezeMojoModel {
 			URI relativeURI = baseDir.toURI().relativize(from.toURI());
 			URI toURI = targetBaseDir.toURI().resolve(relativeURI);
 			File to = new File(toURI);
-			if (filterExclude.contains(from)) {
+			if (!filterExclude.contains(from)) {
 				String content = FileUtils.readFileToString(from, StandardCharsets.UTF_8);
 				content = content.replace(oldPkg, newPkg);
 				FileUtils.writeStringToFile(to, content, StandardCharsets.UTF_8);
