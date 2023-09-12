@@ -1,3 +1,5 @@
+[![Available on Maven Central](https://img.shields.io/maven-central/v/dev.bodewig.hibernate-based-migration?label=Available%20on%20Maven%20Central)](https://central.sonatype.com/artifact/dev.bodewig.hibernate-based-migration)
+
 # Hibernate-Based-Migration
 
 Hibernate Based Migrations are a ~~simple~~ method to do complex migrations of persisted data using Hibernate. Since Hibernate mappings and annotated entity classes always represent the current state of the persisted data, the Maven plugin offers goals to _freeze_ files in a specific version and _thaw_ them in a later version to use in a Migration class. Hibernate Migrations leverage Flyway's rarely used Java-based-Migrations feature.
@@ -10,7 +12,7 @@ Hibernate Based Migrations are a ~~simple~~ method to do complex migrations of p
 <plugin>
     <groupId>dev.bodewig.hibernate-based-migration</groupId>
     <artifactId>hibernate-based-migration-plugin</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
 </plugin>
 ```
 
@@ -86,7 +88,7 @@ src
 <dependency>
     <groupId>dev.bodewig.hibernate-based-migration</groupId>
     <artifactId>hibernate-based-migration</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
 </dependency>
 ```
 
