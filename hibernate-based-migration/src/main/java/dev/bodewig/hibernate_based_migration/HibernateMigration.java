@@ -36,6 +36,12 @@ import org.hibernate.cfg.Configuration;
 public abstract class HibernateMigration extends BaseJavaMigration implements Serializable {
 
 	/**
+	 * Called by Flyway to create the migration.
+	 */
+	public HibernateMigration() {
+	}
+
+	/**
 	 * Only relevant in subclasses
 	 */
 	private static final long serialVersionUID = 1L;
@@ -51,7 +57,7 @@ public abstract class HibernateMigration extends BaseJavaMigration implements Se
 	protected Configuration configAfter;
 
 	/**
-	 * Implements versioning based on {@link JavaBasedMigration} and loads the
+	 * Implements versioning based on {@link BaseJavaMigration} and loads the
 	 * Hibernate configurations
 	 */
 	@Override
@@ -62,7 +68,7 @@ public abstract class HibernateMigration extends BaseJavaMigration implements Se
 	}
 
 	/**
-	 * {@link CoreMigrationType.JDBC} by default, can be overriden with custom type
+	 * {@link CoreMigrationType#JDBC} by default, can be overriden with custom type
 	 */
 	@Override
 	public MigrationType getType() {
@@ -126,7 +132,8 @@ public abstract class HibernateMigration extends BaseJavaMigration implements Se
 	 * 
 	 * @param session
 	 *            a StatelessSession created from the {@link #configBefore}
-	 * @throws Exception any Exception
+	 * @throws Exception
+	 *             any Exception
 	 */
 	public abstract void doBefore(StatelessSession session) throws Exception;
 
@@ -136,7 +143,8 @@ public abstract class HibernateMigration extends BaseJavaMigration implements Se
 	 * 
 	 * @param context
 	 *            a Flyway context
-	 * @throws Exception any Exception
+	 * @throws Exception
+	 *             any Exception
 	 */
 	public abstract void doSql(Context context) throws Exception;
 
@@ -146,7 +154,8 @@ public abstract class HibernateMigration extends BaseJavaMigration implements Se
 	 * 
 	 * @param session
 	 *            a StatelessSession created from the {@link #configAfter}
-	 * @throws Exception any Exception
+	 * @throws Exception
+	 *             any Exception
 	 */
 	public abstract void doAfter(StatelessSession session) throws Exception;
 }

@@ -15,9 +15,23 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 
+/**
+ * Maven goal to add the configured frozen persistence classes and resources to
+ * the compile classpath
+ */
 @Mojo(name = "thaw", defaultPhase = LifecyclePhase.GENERATE_SOURCES)
 public class ThawMojo extends ThawMojoModel {
 
+	/**
+	 * Called by Plexus
+	 */
+	public ThawMojo() {
+	}
+
+	/**
+	 * Adds the configured frozen persistence classes and resources to the compile
+	 * classpath
+	 */
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		List<File> versionDirs = this.getVersionDirs();
@@ -29,6 +43,14 @@ public class ThawMojo extends ThawMojoModel {
 		}
 	}
 
+	/**
+	 * Gets the configured versions. Uses maven {@code VersionRange}s to test if the
+	 * found versions in the {@code frozenDir} match.
+	 * 
+	 * @return the list of frozen version directories
+	 * @throws MojoExecutionException
+	 *             if no valid {@code VersionRange} can be created from the input
+	 */
 	protected List<File> getVersionDirs() throws MojoExecutionException {
 		List<File> selectedVersionDirs = new LinkedList<>();
 		File[] versionDirs = this.frozenDir.listFiles();
@@ -58,6 +80,12 @@ public class ThawMojo extends ThawMojoModel {
 		return selectedVersionDirs;
 	}
 
+	/**
+	 * Adds the resources of the configured frozen versions to the compile classpath
+	 * 
+	 * @param versionDirs
+	 *            the configured versions to thaw
+	 */
 	protected void thawResources(List<File> versionDirs) {
 		for (File versionDir : versionDirs) {
 			File resourcesDir = new File(versionDir, "resources/");
@@ -71,6 +99,13 @@ public class ThawMojo extends ThawMojoModel {
 		}
 	}
 
+	/**
+	 * Adds the Java classes of the configured frozen versions to the compile
+	 * classpath
+	 * 
+	 * @param versionDirs
+	 *            the configured versions to thaw
+	 */
 	protected void thawSources(List<File> versionDirs) {
 		for (File versionDir : versionDirs) {
 			File javaDir = new File(versionDir, "java/");
