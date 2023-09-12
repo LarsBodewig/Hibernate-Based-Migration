@@ -15,17 +15,32 @@ import spoon.reflect.reference.CtTypeReference;
 import spoon.reflect.visitor.chain.CtQueryable;
 import spoon.support.JavaOutputProcessor;
 
+/**
+ * A stateful utility class to interact with the Spoon implementation
+ */
 public class Spoon {
 
 	private final Log log;
 	private final Launcher launcher;
 	private CtModel model;
 
+	/**
+	 * Create a new instance with the specified Logger
+	 * 
+	 * @param log
+	 *            the logger to use
+	 */
 	public Spoon(Log log) {
 		this.log = log;
 		this.launcher = new Launcher();
 	}
 
+	/**
+	 * Add Java classes to the Spoon model
+	 * 
+	 * @param classFiles
+	 *            the Java classes
+	 */
 	public void addClasses(Collection<File> classFiles) {
 		classFiles.forEach(classFile -> {
 			this.log.debug("Reading " + classFile.getAbsolutePath());
@@ -35,6 +50,15 @@ public class Spoon {
 		this.log.info("Read " + getElements(this.model, CtType.class).count() + " types");
 	}
 
+	/**
+	 * Identify a common base package of all Java classes in the model, insert a new
+	 * package with the given name and update all reference to elements withing that
+	 * package
+	 * 
+	 * @param name
+	 *            the identifier to insert into the package name
+	 * @return a tuple with the original and the transformed package name
+	 */
 	public Pair<String, String> rewritePackages(String name) {
 		CtPackage basePkg = getBasePackage(this.model);
 		String oldPkgName = basePkg.getQualifiedName();
@@ -51,6 +75,12 @@ public class Spoon {
 		return new Pair<>(oldPkgName, newPkgName);
 	}
 
+	/**
+	 * Write all Java classes in the model to a given output directory
+	 * 
+	 * @param outDir
+	 *            the output directory
+	 */
 	public void writeClassModel(File outDir) {
 		Environment env = this.launcher.getFactory().getEnvironment();
 		env.setSourceOutputDirectory(outDir);

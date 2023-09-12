@@ -26,6 +26,16 @@ import org.apache.maven.plugins.annotations.Mojo;
 @Execute(phase = LifecyclePhase.COMPILE)
 public class FreezeMojo extends FreezeMojoModel {
 
+	/**
+	 * Called by Plexus
+	 */
+	public FreezeMojo() {
+	}
+
+	/**
+	 * Freeze the configured Java and resource files, rewrite package names and
+	 * apply filtering on resources
+	 */
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		Log log = this.getLog();
@@ -50,6 +60,13 @@ public class FreezeMojo extends FreezeMojoModel {
 		this.freezeResources(resourcesFiles, resourcesOutputDir, pkgName.left(), pkgName.right());
 	}
 
+	/**
+	 * Get the configured or calculated freeze version
+	 * 
+	 * @return the freeze version
+	 * @throws MojoExecutionException
+	 *             if guessing the next freeze version fails
+	 */
 	protected String getFreezeVersion() throws MojoExecutionException {
 		if (this.freezeVersion == null || this.freezeVersion.isBlank()) {
 			File[] versionDirs = this.frozenDir.listFiles();
@@ -79,33 +96,71 @@ public class FreezeMojo extends FreezeMojoModel {
 		}
 	}
 
-	protected void freezeResources(List<File> from, File to, String oldPkg, String newPkg)
+	/**
+	 * Freeze the configured list of resources. Does filtering for the transformed
+	 * package name inside the resources unless configured to be excluded.
+	 * 
+	 * @param from
+	 *            the list of resources to copy
+	 * @param to
+	 *            the target directory
+	 * @param originalPkg
+	 *            the original package name
+	 * @param transformedPkg
+	 *            the transformed package name
+	 * @throws MojoExecutionException
+	 *             {@code IOException} during copying
+	 */
+	protected void freezeResources(List<File> from, File to, String originalPkg, String transformedPkg)
 			throws MojoExecutionException {
 		try {
-			this.getLog().info("Filtering resources: <" + oldPkg + "> to <" + newPkg + ">");
+			this.getLog().info("Filtering resources: <" + originalPkg + "> to <" + transformedPkg + ">");
 			List<File> filterExclude = getResourceFilterungExclude();
 			for (File file : from) {
 				this.getLog().debug("Copying resource " + file.getAbsolutePath());
 				File baseDir = file.isDirectory() ? file : file.getParentFile();
-				copyFile(baseDir, file, to, filterExclude, oldPkg, newPkg);
+				this.copyFile(baseDir, file, to, filterExclude, originalPkg, transformedPkg);
 			}
 		} catch (IOException e) {
 			throw new MojoExecutionException("Failed to copy resource file", e);
 		}
 	}
 
+	/**
+	 * Get the configured Java output directory
+	 * 
+	 * @param version
+	 *            the version String to copy to
+	 * @return the Java output directory
+	 */
 	protected File getJavaOuputDir(String version) {
 		File javaOutputDir = new File(this.frozenDir, version + "/java/");
 		javaOutputDir.mkdirs();
 		return javaOutputDir;
 	}
 
+	/**
+	 * Get the configured resources output directory
+	 * 
+	 * @param version
+	 *            the version String to copy to
+	 * @param normalizedVersion
+	 *            the normalized version to include in the resource path
+	 * @return the resources output directory
+	 */
 	protected File getResourcesOutputDir(String version, String normalizedVersion) {
 		File resourcesOutputDir = new File(this.frozenDir, version + "/resources/" + normalizedVersion);
 		resourcesOutputDir.mkdirs();
 		return resourcesOutputDir;
 	}
 
+	/**
+	 * Get the list of Java files to copy
+	 * 
+	 * @return the list of source files
+	 * @throws MojoExecutionException
+	 *             if no source was configured
+	 */
 	protected List<File> getPersistenceClasses() throws MojoExecutionException {
 		List<File> persistenceClasses = new ArrayList<>();
 		boolean anySet = false;
@@ -124,6 +179,11 @@ public class FreezeMojo extends FreezeMojoModel {
 		return persistenceClasses;
 	}
 
+	/**
+	 * Get the list of configured resources to copy
+	 * 
+	 * @return the list of resource files
+	 */
 	protected List<File> getPersistenceResources() {
 		List<File> persistenceResources = new ArrayList<>();
 		if (this.persistenceResourcesFileList != null) {
@@ -136,6 +196,11 @@ public class FreezeMojo extends FreezeMojoModel {
 		return persistenceResources;
 	}
 
+	/**
+	 * Get the list of configured resources to not filter when copying
+	 * 
+	 * @return the list of excluded resource files
+	 */
 	protected List<File> getResourceFilterungExclude() {
 		List<File> excludedResources = new ArrayList<>();
 		if (this.resourceFilteringExcludeFileList != null) {
@@ -148,19 +213,38 @@ public class FreezeMojo extends FreezeMojoModel {
 		return excludedResources;
 	}
 
-	protected static void copyFile(File baseDir, File from, File targetBaseDir, List<File> filterExclude, String oldPkg,
-			String newPkg) throws IOException {
+	/**
+	 * Recursive method copying resource files and applying filtering based on the
+	 * original and transformed package name
+	 * 
+	 * @param fromBaseDir
+	 *            the base directory to copy from
+	 * @param from
+	 *            the source file to copy
+	 * @param toBaseDir
+	 *            the base directory to copy to
+	 * @param filterExclude
+	 *            a list of resources that should not be filtered
+	 * @param originalPkg
+	 *            the original package name
+	 * @param transformedPkg
+	 *            the transformed package name
+	 * @throws IOException
+	 *             file level error
+	 */
+	protected void copyFile(File fromBaseDir, File from, File toBaseDir, List<File> filterExclude, String originalPkg,
+			String transformedPkg) throws IOException {
 		if (from.isDirectory()) {
 			for (File f : from.listFiles()) {
-				copyFile(baseDir, f, targetBaseDir, filterExclude, oldPkg, newPkg);
+				this.copyFile(fromBaseDir, f, toBaseDir, filterExclude, originalPkg, transformedPkg);
 			}
 		} else {
-			URI relativeURI = baseDir.toURI().relativize(from.toURI());
-			URI toURI = targetBaseDir.toURI().resolve(relativeURI);
+			URI relativeURI = fromBaseDir.toURI().relativize(from.toURI());
+			URI toURI = toBaseDir.toURI().resolve(relativeURI);
 			File to = new File(toURI);
 			if (!filterExclude.contains(from)) {
 				String content = FileUtils.readFileToString(from, StandardCharsets.UTF_8);
-				content = content.replace(oldPkg, newPkg);
+				content = content.replace(originalPkg, transformedPkg);
 				FileUtils.writeStringToFile(to, content, StandardCharsets.UTF_8);
 			} else {
 				FileUtils.copyFile(from, to);
@@ -168,7 +252,14 @@ public class FreezeMojo extends FreezeMojoModel {
 		}
 	}
 
-	protected static String normalizedFreezeVersion(String version) throws MojoExecutionException {
+	/**
+	 * Create a valid Java identifier from a version String
+	 * 
+	 * @param version
+	 *            the version String
+	 * @return a valid Java identifier created from the version String
+	 */
+	protected static String normalizedFreezeVersion(String version) {
 		return Utils.toJavaIdentifier(version);
 	}
 }

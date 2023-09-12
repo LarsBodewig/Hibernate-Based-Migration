@@ -6,8 +6,21 @@ import java.util.List;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
+/**
+ * Model for the {@link dev.bodewig.hibernate_based_migration.plugin.FreezeMojo
+ * FreezeMojo}
+ */
 public abstract class FreezeMojoModel extends AbstractMojo {
 
+	/**
+	 * Default constructor
+	 */
+	public FreezeMojoModel() {
+	}
+
+	/**
+	 * The version used if no prior version is found or configured
+	 */
 	protected static final String INITIAL_VERSION = "1";
 
 	/**
