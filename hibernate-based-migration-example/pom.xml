@@ -4,14 +4,14 @@
     <parent>
         <groupId>dev.bodewig.hibernate-based-migration</groupId>
         <artifactId>hibernate-based-migration-parent</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>1.0.0</version>
     </parent>
     <artifactId>hibernate-based-migration-example</artifactId>
     <dependencies>
         <dependency>
             <groupId>dev.bodewig.hibernate-based-migration</groupId>
             <artifactId>hibernate-based-migration</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>1.0.0</version>
         </dependency>
     </dependencies>
     <build>
@@ -42,7 +42,7 @@
             <plugin>
                 <groupId>dev.bodewig.hibernate-based-migration</groupId>
                 <artifactId>hibernate-based-migration-plugin</artifactId>
-                <version>1.0.0-SNAPSHOT</version>
+                <version>1.0.0</version>
                 <executions>
                     <execution>
                         <id>thaw</id>
@@ -92,7 +92,7 @@
                     <plugin>
                         <groupId>dev.bodewig.hibernate-based-migration</groupId>
                         <artifactId>hibernate-based-migration-plugin</artifactId>
-                        <version>1.0.0-SNAPSHOT</version>
+                        <version>1.0.0</version>
                         <executions>
                             <execution>
                                 <id>freeze</id>
