@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>dev.bodewig.hibernate-based-migration</groupId>
     <artifactId>hibernate-based-migration-parent</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Hibernate Based Migration Parent</name>
     <description>Parent POM for Hibernate based migrations</description>
