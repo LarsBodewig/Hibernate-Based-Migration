@@ -1,4 +1,4 @@
-[![Available on Maven Central](https://img.shields.io/maven-central/v/dev.bodewig.hibernate-based-migration?label=Available%20on%20Maven%20Central)](https://central.sonatype.com/artifact/dev.bodewig.hibernate-based-migration)
+[![Available on Maven Central](https://img.shields.io/maven-central/v/dev.bodewig.hibernate-based-migration/hibernate-based-migration?label=Available%20on%20Maven%20Central)](https://central.sonatype.com/namespace/dev.bodewig.hibernate-based-migration)
 
 # Hibernate-Based-Migration
 
