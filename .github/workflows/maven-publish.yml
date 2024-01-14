@@ -1,10 +1,17 @@
-# https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#Selecting-a-Java-distribution
+# Builds the project with Maven Wrapper using the 'release' profile and publishes to Maven Central
+# ---
+# Add the following Github secrets from your Secret Manager
+# - MAVEN_USERNAME:        your Sonatype username
+# - MAVEN_CENTRAL_TOKEN:   an Access Token generated in your Sonatype profile
+# - MAVEN_GPG_PASSPHRASE:  your GPG passphrase
+# - MAVEN_GPG_PRIVATE_KEY: your GPG private key
 
-name: Maven Package
+name: Maven Publish
 on:
   push:
     branches:
       - main
+  workflow_dispatch:
 jobs:
   build:
     runs-on: ubuntu-latest
