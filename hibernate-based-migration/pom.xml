@@ -4,7 +4,7 @@
     <parent>
         <groupId>dev.bodewig.hibernate-based-migration</groupId>
         <artifactId>hibernate-based-migration-parent</artifactId>
-        <version>1.0.1-SNAPSHOT</version>
+        <version>1.0.1</version>
     </parent>
     <artifactId>hibernate-based-migration</artifactId>
     <name>Hibernate Based Migration</name>
