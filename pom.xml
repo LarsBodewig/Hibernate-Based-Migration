@@ -5,6 +5,9 @@
     <artifactId>hibernate-based-migration-parent</artifactId>
     <version>1.0.0</version>
     <packaging>pom</packaging>
+    <name>Hibernate Based Migration Parent</name>
+    <description>Parent POM for Hibernate based migrations</description>
+    <url>https://github.com/LarsBodewig/Hibernate-Based-Migration</url>
     <licenses>
         <license>
             <name>GNU General Public License, Version 3 or later</name>
