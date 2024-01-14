@@ -107,6 +107,9 @@
                         <formatAnnotations/>
                         <importOrder/>
                         <removeUnusedImports/>
+                        <excludes>
+                            <exclude>target/**</exclude>
+                        </excludes>
                     </java>
                     <pom>
                         <sortPom>
@@ -118,12 +121,18 @@
                         <includes>
                             <include>**/*.json</include>
                         </includes>
+                        <excludes>
+                            <exclude>target/**</exclude>
+                        </excludes>
                         <jackson/>
                     </json>
                     <yaml>
                         <includes>
                             <include>**/*.yaml</include>
                         </includes>
+                        <excludes>
+                            <exclude>target/**</exclude>
+                        </excludes>
                         <jackson/>
                     </yaml>
                     <formats>
@@ -131,6 +140,9 @@
                             <includes>
                                 <include>**/*cfg.xml</include>
                             </includes>
+                            <excludes>
+                                <exclude>target/**</exclude>
+                            </excludes>
                             <prettier>
                                 <devDependencyProperties>
                                     <property>
