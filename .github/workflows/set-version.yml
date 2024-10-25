@@ -1,0 +1,67 @@
+# Updates the maven version and checks in
+
+name: Set version
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Set version'
+        required: false
+        type: string
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    - name: Set up JDK
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'oracle'
+        java-version: '17'
+    - name: Evaluate old version
+      if: ${{ inputs.version == '' }}
+      run: |
+        echo "oldVersion=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> "$GITHUB_ENV"
+    - name: Set next snapshot
+      if: ${{ inputs.version == '' && !endsWith(env.oldVersion, '-SNAPSHOT') }}
+      run: |
+        mvn versions:set -DgenerateBackupPoms=false -DnextSnapshot=true
+        echo "commitMsg=Next snapshot version" >> "$GITHUB_ENV"
+    - name: Remove snapshot
+      if: ${{ inputs.version == '' && endsWith(env.oldVersion, '-SNAPSHOT') }}
+      run: |
+        mvn versions:set -DgenerateBackupPoms=false -DremoveSnapshot=true
+        echo "commitMsg=Remove snapshot version" >> "$GITHUB_ENV"
+    - name: Set version
+      if: ${{ inputs.version != '' }}
+      run: |
+        mvn versions:set -DgenerateBackupPoms=false -DnewVersion=${{ input.version }}
+        echo "commitMsg=Set version to $inputs.version" >> "$GITHUB_ENV"
+    - name: Evaluate new version
+      if: ${{ inputs.version == '' && endsWith(env.oldVersion, '-SNAPSHOT') }}
+      run: |
+        echo "newVersion=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> "$GITHUB_ENV"
+    - name: Update version in README
+      uses: richardrigutins/replace-in-files@v2
+      with:
+        files: 'README.md'
+        search-text: '${{ env.oldVersion }}'
+        replacement-text: '${{ env.newVersion }}'
+        encoding: 'utf8'
+    - name: Commit changes
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git add .
+        git commit -m "$commitMsg"
+    - name: Set and push tag
+      if: ${{ inputs.version == '' && endsWith(env.oldVersion, '-SNAPSHOT') }}
+      run: |
+        git tag -a "v$inputs.version" -m "v$inputs.version" -f
+        git push origin v$inputs.version -f
+    - name: Push commit
+      run: |
+        git push
