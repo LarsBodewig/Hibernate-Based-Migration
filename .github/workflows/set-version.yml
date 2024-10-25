@@ -22,12 +22,11 @@ jobs:
       with:
         token: ${{ secrets.PERSONAL_GITHUB_TOKEN }}
     - name: Set up JDK
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@v4
       with:
         distribution: 'oracle'
         java-version: '17'
     - name: Evaluate old version
-      if: ${{ inputs.version == '' }}
       run: |
         echo "oldVersion=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> "$GITHUB_ENV"
     - name: Set next snapshot
@@ -44,13 +43,11 @@ jobs:
       if: ${{ inputs.version != '' }}
       run: |
         mvn -B versions:set -DgenerateBackupPoms=false -DnewVersion=${{ inputs.version }}
-        echo "commitMsg=Set version to $inputs.version" >> "$GITHUB_ENV"
+        echo "commitMsg=Set version to ${{ inputs.version }}" >> "$GITHUB_ENV"
     - name: Evaluate new version
-      if: ${{ inputs.version == '' && endsWith(env.oldVersion, '-SNAPSHOT') }}
       run: |
         echo "newVersion=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> "$GITHUB_ENV"
     - name: Update version in README
-      if: ${{ inputs.version == '' && endsWith(env.oldVersion, '-SNAPSHOT') }}
       uses: richardrigutins/replace-in-files@v2
       with:
         files: 'README.md'
@@ -66,8 +63,8 @@ jobs:
     - name: Set and push tag
       if: ${{ inputs.version == '' && endsWith(env.oldVersion, '-SNAPSHOT') }}
       run: |
-        git tag -a "v$inputs.version" -m "v$inputs.version" -f
-        git push origin v$inputs.version -f
+        git tag -a "v${{ env.newVersion }}" -m "v${{ env.newVersion }}" -f
+        git push origin v${{ env.newVersion }} -f
     - name: Push commit
       run: |
         git push -f
