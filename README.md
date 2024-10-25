@@ -12,7 +12,7 @@ Hibernate Based Migrations are a ~~simple~~ method to do complex migrations of p
 <plugin>
     <groupId>dev.bodewig.hibernate-based-migration</groupId>
     <artifactId>hibernate-based-migration-plugin</artifactId>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>1.0.2</version>
 </plugin>
 ```
 
